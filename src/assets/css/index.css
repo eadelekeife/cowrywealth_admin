@@ -318,13 +318,19 @@ button.addSection {
     width: calc(100% - 3%);
 }
 
+.grid_3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 10px;
+}
+
 .grid_4 {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     grid-gap: 10px;
 }
 
-.grid_4 img {
+.grid_4 img, .grid_3 img {
     width: 100%;
     height: auto;
     border-radius: 3px;

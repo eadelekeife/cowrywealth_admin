@@ -3,7 +3,7 @@ import axios from '../axiosurl';
 export const loginUser = (e) => async dispatch => {
     let { emailAddress, password } = e;
     try {
-        let submitData = await axios.post('/ambassador/signinambassador', {
+        let submitData = await axios.post('/admin/signinadmin', {
             emailAddress,
             password
         });

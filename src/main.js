@@ -28,7 +28,8 @@ import NewEvent from './components/events/newEvents';
 import NewEventCategory from './components/events/addcategory.js';
 import AllEventCategories from './components/events/allcategories.js';
 import AllEvents from './components/events/allEvents';
-import VisibleEvents from './components/events/visibleEvents';
+import ReviewsAndComments from './components/events/reviewsandcomments';
+import AllEventReviews from './components/events/review';
 import HiddenEvents from './components/events/hiddenEvents';
 import EditEvents from './components/events/editEvents';
 import EditEvent from './components/events/edit';
@@ -39,18 +40,21 @@ import AllCommunity from './components/communities/allCommunities';
 import NewCommunity from './components/communities/newCommunities';
 import NewCommunityCategories from './components/communities/addcategory';
 import AllCommunityCategories from './components/communities/allcategory';
-import VisibleCommunities from './components/communities/visibleCommunities';
+import CommunityReviews from './components/communities/reviewsandcomments';
 import HiddenCommunities from './components/communities/hiddenCommunities';
 import EditCommunities from './components/communities/editCommunities';
+import AllCommunityReviews from './components/communities/review';
 
 // businesses
 import AllBusiness from './components/businesses/allBusinesses';
 import NewBusiness from './components/businesses/newBusiness';
 import NewBusinessesCategories from './components/businesses/addcategory';
 import AllBusinessesCategories from './components/businesses/allcategory';
-import VisibleBusinesses from './components/businesses/visibleBusiness';
+import BusinessReviews from './components/businesses/reviewsandcomments';
 import HiddenBusinesses from './components/businesses/hiddenbusiness';
 import EditBusinesses from './components/businesses/editBusiness';
+import EditBusiness from './components/businesses/edit';
+import AllBusinessReviews from './components/businesses/review';
 
 
 // auth
@@ -68,6 +72,7 @@ const App = () => {
                 <Route path="/" exact element={<Dashboard />} />
                 <Route path="/signin" exact element={<SignIn />} />
                 <Route path="/signout" exact element={<SignOut />} />
+                <Route path="/set_password/:id" exact element={<SetPassword />} />
 
                 <Route path="/allusers" exact element={<AllUsers />} />
 
@@ -85,14 +90,15 @@ const App = () => {
                 <Route path="/alllga" exact element={<AllLocalGovernments />} />
                 <Route path="/editlg/:lgName/:lgId" exact element={<EditLocalGovernment />} />
                 <Route path="/editstate/:stateName/:stateId" exact element={<EditState />} />
-                
+
 
                 <Route path="/event/categories/new" element={<NewEventCategory />} />
                 <Route path="/event/categories/all" element={<AllEventCategories />} />
                 <Route path="/events/all" exact element={<AllEvents />} />
                 <Route path="/events/new" exact element={<NewEvent />} />
                 <Route path="/events/hidden" exact element={<HiddenEvents />} />
-                <Route path="/events/visible" exact element={<VisibleEvents />} />
+                <Route path="/events/reviewsandcomments" exact element={<ReviewsAndComments />} />
+                <Route path="/events/reviews/:eventId" exact element={<AllEventReviews />} />
                 <Route path="/events/edit" exact element={<EditEvents />} />
                 <Route path="/events/edit/:eventTitle/:eventId" exact element={<EditEvent />} />
                 <Route path="/event/:eventTitle/:eventId" exact element={<SingleEvent />} />
@@ -102,7 +108,8 @@ const App = () => {
                 <Route path="/communities/all" exact element={<AllCommunity />} />
                 <Route path="/communities/new" exact element={<NewCommunity />} />
                 <Route path="/communities/hidden" exact element={<HiddenCommunities />} />
-                <Route path="/communities/visible" exact element={<VisibleCommunities />} />
+                <Route path="/communities/reviewsandcomments" exact element={<CommunityReviews />} />
+                <Route path="/community/reviews/:communityId" exact element={<AllCommunityReviews />} />
                 <Route path="/communities/edit" exact element={<EditCommunities />} />
 
                 <Route path="/businesses/categories/new" element={<NewBusinessesCategories />} />
@@ -110,11 +117,12 @@ const App = () => {
                 <Route path="/businesses/all" exact element={<AllBusiness />} />
                 <Route path="/businesses/new" exact element={<NewBusiness />} />
                 <Route path="/businesses/hidden" exact element={<HiddenBusinesses />} />
-                <Route path="/businesses/visible" exact element={<VisibleBusinesses />} />
+                <Route path="/businesses/reviewsandcomments" exact element={<BusinessReviews />} />
+                <Route path="/business/reviews/:businessId" exact element={<AllBusinessReviews />} />
                 <Route path="/businesses/edit" exact element={<EditBusinesses />} />
+                <Route path="/businesses/edit/:businessName/:businessId" exact element={<EditBusiness />} />
+                
 
-                <Route path="/login" exact element={<SignIn />} />
-                <Route path="/set_password/:id" exact element={<SetPassword />} />
             </Routes>
         </BrowserRouter>
     )

@@ -5,8 +5,8 @@ import SideNav from '../../common_files/sideNav';
 import TopNav from '../../common_files/topNav';
 
 import { Spin, notification } from 'antd';
-import { Link } from 'react-router-dom';
 import axios from '../../common_files/axiosurl';
+import { Link } from 'react-router-dom';
 
 const AllEvents = () => {
 
@@ -24,7 +24,7 @@ const AllEvents = () => {
 
 
     useEffect(() => {
-        axios('/admin/get_all_visible_businesses')
+        axios('/admin/get_all_businesses')
             .then(eventsData => {
                 if (eventsData.data.summary === "success") {
                     setEventsData(eventsData.data.message);
@@ -39,27 +39,6 @@ const AllEvents = () => {
                 setSpinnerStatus(false);
             })
     }, [])
-
-    const EditCategory = e => {
-        setSpinnerStatus(true);
-        let url = e.action ? '/admin/hideBusiness' : '/admin/showBusiness';
-        axios.post(url, {
-            businessId: e.categoryId
-        })
-            .then(categoryData => {
-                if (categoryData.data.summary === "success") {
-                    setEventsData(categoryData.data.message);
-                    setSpinnerStatus(false);
-                } else {
-                    setErrorMessage(categoryData.data.statusMessage)
-                    setSpinnerStatus(false);
-                }
-            })
-            .catch(err => {
-                setErrorMessage('An error occurred while fetching category data. Please reload page to try again');
-                setSpinnerStatus(false);
-            })
-    }
 
     return (
         <div>
@@ -84,23 +63,17 @@ const AllEvents = () => {
                                                         {eventsData.map((events, index) => {
                                                             return (
                                                                 <div key={index}>
-                                                                    <Link to={`/businesses/${events.businessName}/${events.id}`}>
-                                                                        <img src={events.displayImage} alt={events.displayImage} />
-                                                                        <h5>{events.businessName}</h5>
-                                                                        <p style={{ color: '#0a0a0a' }}>{events.BusinessesCategoriesDatum.categoryName}</p>
-                                                                    </Link>
-                                                                    <button
-                                                                        onClick={(() => EditCategory({
-                                                                            categoryId: events.id,
-                                                                            action: events.displayStatus
-                                                                        }))}
+                                                                    <img src={events.displayImage} alt={events.displayImage} />
+                                                                    <h5>{events.businessName}</h5>
+                                                                    <p style={{ color: '#0a0a0a' }}>{
+                                                                        events.businessReviews.length === 1 ?
+                                                                            `${events.businessReviews.length} review` :
+                                                                            `${events.businessReviews.length} reviews`
+                                                                    }</p>
+                                                                    <Link to={`/business/reviews/${events.id}`}
                                                                         className="bg_border_red">
-                                                                        {events.displayStatus ?
-                                                                            'Hide Event'
-                                                                            :
-                                                                            'Show Event'
-                                                                        }
-                                                                    </button>
+                                                                        View Event
+                                                                    </Link>
                                                                 </div>
                                                             )
                                                         })}

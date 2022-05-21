@@ -86,7 +86,7 @@ const SignIn = props => {
                             <div style={{ marginTop: '7%' }}></div>
                             <button
                                 style={{ width: '100%' }}
-                                className="bg_red">Login to Ambassadors Account</button>
+                                className="bg_red">Login to Administrator Account</button>
                         </div>
                     </form>
                 </div>

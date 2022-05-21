@@ -4,17 +4,9 @@ import React, { useState, useEffect } from 'react';
 import SideNav from '../../common_files/sideNav';
 import TopNav from '../../common_files/topNav';
 
-import { useNavigate } from 'react-router-dom';
-
-import {
-    Input, Spin, Radio, message, Upload, Divider, Checkbox,
-    DatePicker, TimePicker,
-    Row, Col, Select, notification
-} from 'antd';
-import { LoadingOutlined, PlusOutlined, DeleteOutlined } from '@ant-design/icons';
-import { Controller, useForm, useFieldArray } from 'react-hook-form';
+import { Spin, notification, Rate } from 'antd';
 import axios from '../../common_files/axiosurl';
-import NumberFormat from 'react-number-format';
+import { Link } from 'react-router-dom';
 
 const AllEvents = () => {
 
@@ -27,50 +19,52 @@ const AllEvents = () => {
     };
 
     const [errorMessage, setErrorMessage] = useState('');
-    const [eventsData, setEventsData] = useState([]);
+    const [reviewsBox, setreviewsBox] = useState([]);
     const [spinnerStatus, setSpinnerStatus] = useState(true);
+    const [eventId, setEventId] = useState('');
 
 
     useEffect(() => {
-        axios('/admin/get_all_visible_events')
-            .then(eventsData => {
-                if (eventsData.data.summary === "success") {
-                    setEventsData(eventsData.data.message);
+        let eventId = window.location.pathname.split('/')[3];
+        setEventId(window.location.pathname.split('/')[3]);
+        axios(`/singleeventreviews/${eventId}`)
+            .then(reviewsBox => {
+                if (reviewsBox.data.statusMessage === "success") {
+                    setreviewsBox(reviewsBox.data.message);
                     setSpinnerStatus(false);
                 } else {
-                    setErrorMessage(eventsData.data.statusMessage)
+                    setErrorMessage(reviewsBox.data.statusMessage);
                     setSpinnerStatus(false);
                 }
             })
             .catch(err => {
-                setErrorMessage('An error occurred while fetching category data. Please reload page to try again');
+                setErrorMessage('An error occurred while fetching reviews. Please reload page to try again');
                 setSpinnerStatus(false);
             })
     }, [])
 
-    const EditCategory = e => {
+    const deleteEventReview = e => {
+        setErrorMessage('');
         setSpinnerStatus(true);
-        let url = e.action ? '/admin/hideEvent' : '/admin/showEvent';
-        axios.post(url, {
-            eventId: e.categoryId
+        axios.post('/admin/deleteEventReview', {
+            reviewId: e,
+            eventId
+        }, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}`
+            }
+        }).then(categorySaved => {
+            if (categorySaved.data.statusMessage === "success") {
+                setreviewsBox(categorySaved.data.message);
+                setSpinnerStatus(false);
+                openNotificationWithIcon('success', "Review deleted")
+            } else {
+                openNotificationWithIcon('error', categorySaved.data.summary)
+                setSpinnerStatus(false);
+            }
         })
-            .then(eventsData => {
-                if (eventsData.data.summary === "success") {
-                    let eventsBox = [];
-                    eventsData.data.message.forEach(event => {
-                        if (event.displayStatus) {
-                            eventsBox.push(event);
-                        }
-                    })
-                    setEventsData(eventsBox);
-                    setSpinnerStatus(false);
-                } else {
-                    setErrorMessage(eventsData.data.statusMessage);
-                    setSpinnerStatus(false);
-                }
-            })
             .catch(err => {
-                setErrorMessage('An error occurred while fetching category data. Please reload page to try again');
+                openNotificationWithIcon('error', 'An error occurred while deleting reviews. Please try again')
                 setSpinnerStatus(false);
             })
     }
@@ -94,24 +88,25 @@ const AllEvents = () => {
                                         <div className="contain">
                                             {
                                                 !errorMessage ?
-                                                    <div className="category_display grid_4">
-                                                        {eventsData.map((events, index) => {
+                                                    <div className="category_display grid_3">
+                                                        {reviewsBox.map((reviews, index) => {
                                                             return (
                                                                 <div key={index}>
-                                                                    <img src={events.displayImage} alt={events.displayImage} />
-                                                                    <h5>{events.eventTitle}</h5>
-                                                                    <p>{events.EventCategoriesDatum.categoryName}</p>
+                                                                    <Rate disabled allowHalf value={+reviews.star} />
+                                                                    <p
+                                                                        style={{ marginBottom: '15px', lineHeight: '1.7' }}
+                                                                    >{reviews.message}</p>
+                                                                    <p
+                                                                        style={{ marginBottom: '0px' }}
+                                                                    >{reviews.User.firstName} {reviews.User.lastName}</p>
+                                                                    <p
+                                                                        style={{ marginBottom: '5px' }}
+                                                                    >{reviews.createdAt.split('T')[0]}</p>
                                                                     <button
-                                                                        onClick={(() => EditCategory({
-                                                                            categoryId: events.id,
-                                                                            action: events.displayStatus
-                                                                        }))}
+                                                                        onClick={() => deleteEventReview(reviews.id)}
+                                                                        style={{ padding: '10px' }}
                                                                         className="bg_border_red">
-                                                                        {events.displayStatus ?
-                                                                            'Hide Event'
-                                                                            :
-                                                                            'Show Event'
-                                                                        }
+                                                                        Delete Review
                                                                     </button>
                                                                 </div>
                                                             )

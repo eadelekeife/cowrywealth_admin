@@ -10,7 +10,7 @@ const SideNav = props => {
                     <Link to="/profile/signout"><i className="uil uil-search"></i></Link>
                     <Link to="/profile/signout"><i className="uil uil-bell"></i></Link>
                     <Link to="/profile/signout"><i className="uil uil-envelope-minus"></i></Link>
-                    <Link to="/profile/signout"><i className="uil uil-signout"></i></Link>
+                    <Link to="/signout"><i className="uil uil-signout"></i></Link>
                 </div>
             </div>
             <div className="top_nav">

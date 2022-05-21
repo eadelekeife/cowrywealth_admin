@@ -4,17 +4,9 @@ import React, { useState, useEffect } from 'react';
 import SideNav from '../../common_files/sideNav';
 import TopNav from '../../common_files/topNav';
 
-import { useNavigate } from 'react-router-dom';
-
-import {
-    Input, Spin, Radio, message, Upload, Divider, Checkbox,
-    DatePicker, TimePicker,
-    Row, Col, Select, notification
-} from 'antd';
-import { LoadingOutlined, PlusOutlined, DeleteOutlined } from '@ant-design/icons';
-import { Controller, useForm, useFieldArray } from 'react-hook-form';
+import { Spin, notification } from 'antd';
 import axios from '../../common_files/axiosurl';
-import NumberFormat from 'react-number-format';
+import { Link } from 'react-router-dom';
 
 const AllEvents = () => {
 
@@ -32,7 +24,7 @@ const AllEvents = () => {
 
 
     useEffect(() => {
-        axios('/admin/get_all_visible_communities')
+        axios('/admin/get_all_events')
             .then(eventsData => {
                 if (eventsData.data.summary === "success") {
                     setEventsData(eventsData.data.message);
@@ -47,33 +39,6 @@ const AllEvents = () => {
                 setSpinnerStatus(false);
             })
     }, [])
-
-    const EditCategory = e => {
-        setSpinnerStatus(true);
-        let url = e.action ? '/admin/hideCommunity' : '/admin/showCommunity';
-        axios.post(url, {
-            communityId: e.categoryId
-        })
-            .then(eventsData => {
-                if (eventsData.data.summary === "success") {
-                    let eventsBox = [];
-                    eventsData.data.message.forEach(event => {
-                        if (event.displayStatus) {
-                            eventsBox.push(event);
-                        }
-                    })
-                    setEventsData(eventsBox);
-                    setSpinnerStatus(false);
-                } else {
-                    setErrorMessage(eventsData.data.statusMessage);
-                    setSpinnerStatus(false);
-                }
-            })
-            .catch(err => {
-                setErrorMessage('An error occurred while fetching category data. Please reload page to try again');
-                setSpinnerStatus(false);
-            })
-    }
 
     return (
         <div>
@@ -99,20 +64,16 @@ const AllEvents = () => {
                                                             return (
                                                                 <div key={index}>
                                                                     <img src={events.displayImage} alt={events.displayImage} />
-                                                                    <h5>{events.communityName}</h5>
-                                                                    <p>{events.CommunityCategoriesDatum.categoryName}</p>
-                                                                    <button
-                                                                        onClick={(() => EditCategory({
-                                                                            categoryId: events.id,
-                                                                            action: events.displayStatus
-                                                                        }))}
+                                                                    <h5>{events.eventTitle}</h5>
+                                                                    <p style={{ color: '#0a0a0a' }}>{
+                                                                        events.eventReviews.length === 1 ?
+                                                                            `${events.eventReviews.length} review` :
+                                                                            `${events.eventReviews.length} reviews`
+                                                                    }</p>
+                                                                    <Link to={`/events/reviews/${events.id}`}
                                                                         className="bg_border_red">
-                                                                        {events.displayStatus ?
-                                                                            'Hide Event'
-                                                                            :
-                                                                            'Show Event'
-                                                                        }
-                                                                    </button>
+                                                                        View Event
+                                                                    </Link>
                                                                 </div>
                                                             )
                                                         })}

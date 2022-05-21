@@ -4,18 +4,9 @@ import React, { useState, useEffect } from 'react';
 import SideNav from '../../common_files/sideNav';
 import TopNav from '../../common_files/topNav';
 
-import { useNavigate } from 'react-router-dom';
-
-import { Link } from 'react-router-dom';
-import {
-    Input, Spin, Radio, message, Upload, Divider, Checkbox,
-    DatePicker, TimePicker,
-    Row, Col, Select, notification
-} from 'antd';
-import { LoadingOutlined, PlusOutlined, DeleteOutlined } from '@ant-design/icons';
-import { Controller, useForm, useFieldArray } from 'react-hook-form';
+import { Spin, notification } from 'antd';
 import axios from '../../common_files/axiosurl';
-import NumberFormat from 'react-number-format';
+import { Link } from 'react-router-dom';
 
 const AllEvents = () => {
 
@@ -33,7 +24,7 @@ const AllEvents = () => {
 
 
     useEffect(() => {
-        axios('/admin/get_all_businesses')
+        axios('/admin/get_all_communities')
             .then(eventsData => {
                 if (eventsData.data.summary === "success") {
                     setEventsData(eventsData.data.message);
@@ -73,11 +64,15 @@ const AllEvents = () => {
                                                             return (
                                                                 <div key={index}>
                                                                     <img src={events.displayImage} alt={events.displayImage} />
-                                                                    <h5>{events.businessName}</h5>
-                                                                    <p>{events.BusinessesCategoriesDatum.categoryName}</p>
-                                                                    <Link
-                                                                        to={`/businesses/edit/${events.businessName}/${events.id}`}
-                                                                        className="bg_border_red">Edit Event
+                                                                    <h5>{events.communityName}</h5>
+                                                                    <p style={{ color: '#0a0a0a' }}>{
+                                                                        events.communityReviews.length === 1 ?
+                                                                            `${events.communityReviews.length} review` :
+                                                                            `${events.communityReviews.length} reviews`
+                                                                    }</p>
+                                                                    <Link to={`/community/reviews/${events.id}`}
+                                                                        className="bg_border_red">
+                                                                        View Community
                                                                     </Link>
                                                                 </div>
                                                             )
